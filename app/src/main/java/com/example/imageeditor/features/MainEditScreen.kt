@@ -9,6 +9,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
@@ -30,8 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,26 +44,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.imageeditor.R
-import com.example.imageeditor.utils.Utils
+import com.example.imageeditor.core.navigation.Screen
+import com.example.imageeditor.core.utils.Utils
+import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import java.io.FileDescriptor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditScreen(
-    image: ImageBitmap?
+    image: ImageBitmap?,
+    onAction: (DrawingAction) -> Unit,
+    navController: NavController
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
                 title = {
-                    Row {
-                        Text(
-                            "Edit Image",
-                            style = TextStyle(fontSize = 16.sp)
-                        )
-                    }
+                    Text(
+                        "Edit Image",
+                        style = TextStyle(fontSize = 16.sp)
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -74,7 +79,9 @@ fun MainEditScreen(
                 actions = {
                     Text(
                         "Done",
-                        style = TextStyle(fontSize = 16.sp)
+                        style = TextStyle(fontSize = 16.sp),
+                        modifier = Modifier.padding(end = 8.dp)
+
                     )
                 }
             )
@@ -82,12 +89,6 @@ fun MainEditScreen(
     ) { padding ->
 
         val context = LocalContext.current
-        var imageBitmap = rememberSaveable {
-            mutableStateOf<ImageBitmap?>(null)
-        }
-        image?.let {
-            imageBitmap.value = it
-        }
 
 
         val pickVisualMediaLauncher = rememberLauncherForActivityResult(
@@ -98,7 +99,7 @@ fun MainEditScreen(
                     it?.let { parcelFileDescriptor ->
                         val fd: FileDescriptor = parcelFileDescriptor.fileDescriptor
                         val bitmap: Bitmap = BitmapFactory.decodeFileDescriptor(fd)
-                        imageBitmap.value = bitmap.asImageBitmap()
+                        onAction(DrawingAction.OnUpdatedBitmap(bitmap.asImageBitmap()))
                     }
                 }
             }
@@ -122,31 +123,35 @@ fun MainEditScreen(
                 .background(Color.White)
         ) {
 
-            if (imageBitmap.value != null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    Spacer(modifier = Modifier.height(20.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                if (image != null) {
                     Image(
                         modifier = Modifier.fillMaxWidth(),
-                        bitmap = imageBitmap.value!!,
+                        bitmap = image,
                         contentDescription = null,
+                        contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(8.dp)
                             .background(Color.White),
-                        verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         EditIcon(
-                            icon = R.drawable.brush,
+                            icon = R.drawable.paint,
                             iconTitle = "Brush",
-                            onIconPressed = {}
+                            onIconPressed = {
+                                onAction(DrawingAction.OnUpdatedBitmap(bitmap = image))
+                                navController.navigate(Screen.BrushEraseScreen)
+                            }
                         )
                         EditIcon(
                             icon = R.drawable.crop,
@@ -158,37 +163,39 @@ fun MainEditScreen(
                             iconTitle = "Rotate",
                             onIconPressed = {}
                         )
-
                     }
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-            }
 
-            Button(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {
-                    if (Utils.readPermissionsGranted(context)) {
-                        pickVisualMediaLauncher.launch(
-                            PickVisualMediaRequest(
-                                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                }
+
+                Button(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = {
+                        if (Utils.readPermissionsGranted(context)) {
+                            pickVisualMediaLauncher.launch(
+                                PickVisualMediaRequest(
+                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
                             )
-                        )
-                    } else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            permissionRequestLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                         } else {
-                            permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionRequestLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                            } else {
+                                permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            }
                         }
                     }
+                ) {
+                    Text(text = "Pick Image")
                 }
-            ) {
-                Text(text = "Pick Image")
             }
+
 
         }
     }
@@ -200,21 +207,23 @@ fun EditIcon(
     iconTitle: String,
     onIconPressed: () -> Unit
 ) {
-    IconButton(
-        onClick = {
-            onIconPressed()
-        }
-    ) {
-        Column {
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = null,
-                modifier = Modifier.size(28.dp)
-            )
 
-            Text(iconTitle, style = TextStyle(fontSize = 16.sp))
-        }
+    Column(
+        modifier = Modifier.clickable {
+            onIconPressed()
+        },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier.size(34.dp)
+        )
+
+        Text(iconTitle, style = TextStyle(fontSize = 16.sp))
     }
+
 }
 
 

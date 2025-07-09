@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
-import com.example.imageeditor.features.MainEditScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.imageeditor.core.navigation.SetupNavHost
+import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingViewModel
 import com.example.imageeditor.ui.theme.ImageEditorTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,8 +17,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel by viewModels<DrawingViewModel>()
+            val state = viewModel.drawingState.collectAsStateWithLifecycle()
             ImageEditorTheme {
-                MainEditScreen(null)
+                SetupNavHost(
+                    state = state.value,
+                    onAction = viewModel::onAction
+                )
             }
         }
     }
