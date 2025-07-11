@@ -2,15 +2,13 @@ package com.example.imageeditor.features.rotation_screen.presentation.viewmodel
 
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import com.example.imageeditor.features.rotation_screen.services.ImageRotationServices
 import com.example.imageeditor.features.rotation_screen.services.ImageRotationServicesImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
-class RotationViewModel: ViewModel() {
+class RotationViewModel : ViewModel() {
 
 
     private val _rotationDegree = MutableStateFlow(0f)

@@ -105,6 +105,4 @@ fun ImageRotationScreen(
             }
         }
     }
-
-
 }
