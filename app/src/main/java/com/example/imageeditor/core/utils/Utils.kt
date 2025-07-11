@@ -1,4 +1,4 @@
-package com.example.imageeditor.utils
+package com.example.imageeditor.core.utils
 
 import android.Manifest
 import android.content.Context

@@ -44,7 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imageeditor.R
-import com.example.imageeditor.utils.Utils
+import com.example.imageeditor.core.utils.Utils
 import java.io.FileDescriptor
 
 @OptIn(ExperimentalMaterial3Api::class)
