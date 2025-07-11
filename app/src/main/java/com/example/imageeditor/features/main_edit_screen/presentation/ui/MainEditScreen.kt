@@ -1,4 +1,4 @@
-package com.example.imageeditor.features
+package com.example.imageeditor.features.main_edit_screen.presentation.ui
 
 import android.Manifest
 import android.graphics.Bitmap
@@ -48,15 +48,14 @@ import androidx.navigation.NavController
 import com.example.imageeditor.R
 import com.example.imageeditor.core.navigation.Screen
 import com.example.imageeditor.core.utils.Utils
-import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import java.io.FileDescriptor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditScreen(
-    image: ImageBitmap?,
-    onAction: (DrawingAction) -> Unit,
-    navController: NavController,
+    onImageSelected:(ImageBitmap) -> Unit,
+    imageState: ImageBitmap?,
+    navController: NavController
 ) {
 
     Scaffold(
@@ -101,7 +100,7 @@ fun MainEditScreen(
                     it?.let { parcelFileDescriptor ->
                         val fd: FileDescriptor = parcelFileDescriptor.fileDescriptor
                         val bitmap: Bitmap = BitmapFactory.decodeFileDescriptor(fd)
-                        onAction(DrawingAction.OnUpdatedBitmap(bitmap.asImageBitmap()))
+                        onImageSelected(bitmap.asImageBitmap())
                     }
                 }
             }
@@ -131,10 +130,10 @@ fun MainEditScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                if (image != null) {
+                if (imageState != null) {
                     Image(
                         modifier = Modifier.fillMaxWidth(),
-                        bitmap = image,
+                        bitmap = imageState,
                         contentDescription = null,
                         contentScale = ContentScale.Crop
                     )
@@ -159,8 +158,6 @@ fun MainEditScreen(
                             iconTitle = "Crop",
                             onIconPressed = {
                                 // update crop state with image parameter
-                                navController.navigate(Screen.CropImageScreen)
-
                             }
                         )
                         EditIcon(
@@ -168,7 +165,6 @@ fun MainEditScreen(
                             iconTitle = "Rotate",
                             onIconPressed = {
                                 // update rotation state with image parameter
-
                             }
                         )
                     }

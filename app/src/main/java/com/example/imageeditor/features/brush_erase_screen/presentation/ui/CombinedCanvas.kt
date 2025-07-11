@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
@@ -15,19 +16,16 @@ import com.example.imageeditor.features.brush_erase_screen.presentation.viewmode
 
 @Composable
 fun CombinedCanvas(
+    currentImage: ImageBitmap,
     state: DrawingState,
     onAction: (DrawingAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    Log.d("edited Image", state.editedBitmap.toString())
-
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        state.editedBitmap?.let {
-            val imageAspectRatio = it.width.toFloat() / it.height.toFloat()
-
+            val imageAspectRatio = currentImage.width.toFloat() / currentImage.height.toFloat()
             Image(
-                it,
+                currentImage,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -43,8 +41,5 @@ fun CombinedCanvas(
                     .aspectRatio(imageAspectRatio)
 
             )
-        }
-
-
     }
 }
