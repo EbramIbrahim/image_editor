@@ -53,7 +53,7 @@ import java.io.FileDescriptor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditScreen(
-    onImageSelected:(ImageBitmap) -> Unit,
+    onImageSelected: (ImageBitmap) -> Unit,
     imageState: ImageBitmap?,
     navController: NavController
 ) {
@@ -79,7 +79,8 @@ fun MainEditScreen(
                     Text(
                         "Done",
                         style = TextStyle(fontSize = 16.sp),
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier
+                            .padding(end = 8.dp)
                             .clickable {
                                 // navigate back with edited image
                             }
@@ -157,7 +158,7 @@ fun MainEditScreen(
                             icon = R.drawable.crop,
                             iconTitle = "Crop",
                             onIconPressed = {
-                                // update crop state with image parameter
+                                navController.navigate(Screen.CropImageScreen)
                             }
                         )
                         EditIcon(

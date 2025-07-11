@@ -22,15 +22,10 @@ class MainActivity : ComponentActivity() {
             val drawingViewModel by viewModels<DrawingViewModel>()
             val drawingState = drawingViewModel.drawingState.collectAsStateWithLifecycle()
 
-            val cropImageViewModel by viewModels<CropImageViewModel>()
-            val croppedImageState = cropImageViewModel.editedBitmap.collectAsStateWithLifecycle()
-
             ImageEditorTheme {
                 SetupNavHost(
                     state = drawingState.value,
                     onAction = drawingViewModel::onAction,
-                    cropImageState = croppedImageState.value?.asImageBitmap(),
-                    onCropImage = cropImageViewModel::onCrop,
                 )
             }
         }

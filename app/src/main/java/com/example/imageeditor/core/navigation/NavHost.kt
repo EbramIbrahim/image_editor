@@ -10,6 +10,7 @@ import com.example.imageeditor.features.main_edit_screen.presentation.ui.MainEdi
 import com.example.imageeditor.features.brush_erase_screen.presentation.ui.BrushEraseScreen
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
+import com.example.imageeditor.features.crop_screen.presentation.ui.CropImageScreen
 import com.example.imageeditor.features.main_edit_screen.presentation.viewmodel.MainEditViewModel
 
 
@@ -46,6 +47,16 @@ fun SetupNavHost(
                 onImageEdited = {
                     viewModel.updateImage(it)
                 }
+            )
+        }
+
+        composable<Screen.CropImageScreen> {
+            CropImageScreen(
+                currentImage = imageState.value!!,
+                onUpdateCroppedImage = {
+                    viewModel.updateImage(it)
+                },
+                navController = navController
             )
         }
 
