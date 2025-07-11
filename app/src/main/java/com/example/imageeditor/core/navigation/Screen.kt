@@ -12,4 +12,7 @@ interface Screen {
 
     @Serializable
     data object CropImageScreen: Screen
+
+    @Serializable
+    data object ImageRotationScreen: Screen
 }
