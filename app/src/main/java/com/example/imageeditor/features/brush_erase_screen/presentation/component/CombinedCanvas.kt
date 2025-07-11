@@ -1,6 +1,5 @@
-package com.example.imageeditor.features.brush_erase_screen.presentation.ui
+package com.example.imageeditor.features.brush_erase_screen.presentation.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -32,14 +31,14 @@ fun CombinedCanvas(
                     .aspectRatio(imageAspectRatio),
                 contentScale = ContentScale.FillHeight
             )
-            DrawingBrushCanvas(
-                paths = state.paths,
-                currentPath = state.currentPath,
-                onAction = onAction,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(imageAspectRatio)
+        DrawingBrushCanvas(
+            paths = state.paths,
+            currentPath = state.currentPath,
+            onAction = onAction,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(imageAspectRatio)
 
-            )
+        )
     }
 }

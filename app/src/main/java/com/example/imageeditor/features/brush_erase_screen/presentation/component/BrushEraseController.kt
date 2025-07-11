@@ -1,4 +1,4 @@
-package com.example.imageeditor.features.brush_erase_screen.presentation.ui
+package com.example.imageeditor.features.brush_erase_screen.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
