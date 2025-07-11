@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,12 +39,14 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun BrushEraseScreen(
+    currentImage: ImageBitmap,
+    onImageEdited:(ImageBitmap) -> Unit,
     state: DrawingState,
     onAction: (DrawingAction) -> Unit,
     navController: NavController
 ) {
 
-    LaunchedEffect(state.editedBitmap) {
+    LaunchedEffect(currentImage) {
         onAction(DrawingAction.OnCanvasCleared)
     }
     val scope = rememberCoroutineScope()
@@ -76,7 +79,7 @@ fun BrushEraseScreen(
                                 scope.launch {
                                     val editedBitmap = captureController.captureAsync().await()
                                     try {
-                                        onAction(DrawingAction.OnUpdatedBitmap(editedBitmap))
+                                        onImageEdited(editedBitmap)
                                         navController.navigateUp()
                                     } catch (e: Exception) {
                                         // handle error
@@ -99,6 +102,7 @@ fun BrushEraseScreen(
         ) {
 
             CombinedCanvas(
+                currentImage = currentImage,
                 state = state,
                 onAction = onAction,
                 modifier = Modifier

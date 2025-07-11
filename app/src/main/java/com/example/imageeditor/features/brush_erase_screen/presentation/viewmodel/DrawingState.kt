@@ -2,7 +2,6 @@ package com.example.imageeditor.features.brush_erase_screen.presentation.viewmod
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 
 data class DrawingState(
     val selectedColor: Color = Color.Black,
@@ -10,7 +9,6 @@ data class DrawingState(
     val paths: List<PathData> = emptyList(),
     val rotation: Float = 0f,
     val drawingType: DrawingMode = DrawingMode.BRUSH,
-    val editedBitmap: ImageBitmap? = null,
     val thickness: Float = 20f
 )
 

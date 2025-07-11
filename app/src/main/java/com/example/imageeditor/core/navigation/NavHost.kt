@@ -1,13 +1,16 @@
 package com.example.imageeditor.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.imageeditor.features.MainEditScreen
+import com.example.imageeditor.features.main_edit_screen.presentation.ui.MainEditScreen
 import com.example.imageeditor.features.brush_erase_screen.presentation.ui.BrushEraseScreen
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
+import com.example.imageeditor.features.main_edit_screen.presentation.viewmodel.MainEditViewModel
 
 
 @Composable
@@ -18,22 +21,31 @@ fun SetupNavHost(
 
     val navController = rememberNavController()
 
+    val viewModel = viewModel<MainEditViewModel>()
+    val imageState = viewModel.imageState.collectAsStateWithLifecycle()
+
     NavHost(
         navController = navController,
         startDestination = Screen.MainEditScreen
     ) {
         composable<Screen.MainEditScreen> {
             MainEditScreen(
-                image = state.editedBitmap,
                 navController = navController,
-                onAction = onAction
+                onImageSelected = {
+                    viewModel.setInitialImage(it)
+                },
+                imageState = imageState.value,
             )
         }
         composable<Screen.BrushEraseScreen> {
             BrushEraseScreen(
                 state = state,
                 onAction = onAction,
-                navController = navController
+                navController = navController,
+                currentImage = imageState.value!!,
+                onImageEdited = {
+                    viewModel.updateImage(it)
+                }
             )
         }
 

@@ -2,7 +2,6 @@ package com.example.imageeditor.features.brush_erase_screen.presentation.viewmod
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,6 @@ class DrawingViewModel : ViewModel() {
             DrawingAction.OnPathEnd -> onPathEnd()
             is DrawingAction.OnSelectColor -> onSelectColor(action.color)
             is DrawingAction.OnDrawModeChanged -> onDrawModeChanged(action.mode)
-            is DrawingAction.OnUpdatedBitmap -> updateBitmap(action.bitmap)
             is DrawingAction.OnBrushThicknessUpdated -> updateBrushThickness(action.thickness)
             DrawingAction.OnCanvasCleared -> onClearCanvasClick()
         }
@@ -30,9 +28,6 @@ class DrawingViewModel : ViewModel() {
         _drawingState.update { it.copy(thickness = thickness) }
     }
 
-    private fun updateBitmap(bitmap: ImageBitmap?) {
-        _drawingState.update { it.copy(editedBitmap = bitmap) }
-    }
 
     private fun onDrawModeChanged(mode: DrawingMode) {
         _drawingState.update { it.copy(drawingType = mode) }

@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.example.imageeditor.R
-import com.example.imageeditor.features.EditIcon
+import com.example.imageeditor.features.main_edit_screen.presentation.ui.EditIcon
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingMode
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
