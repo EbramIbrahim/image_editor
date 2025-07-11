@@ -56,7 +56,7 @@ import java.io.FileDescriptor
 fun MainEditScreen(
     image: ImageBitmap?,
     onAction: (DrawingAction) -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
 
     Scaffold(
@@ -159,6 +159,8 @@ fun MainEditScreen(
                             iconTitle = "Crop",
                             onIconPressed = {
                                 // update crop state with image parameter
+                                navController.navigate(Screen.CropImageScreen)
+
                             }
                         )
                         EditIcon(
@@ -166,6 +168,7 @@ fun MainEditScreen(
                             iconTitle = "Rotate",
                             onIconPressed = {
                                 // update rotation state with image parameter
+
                             }
                         )
                     }

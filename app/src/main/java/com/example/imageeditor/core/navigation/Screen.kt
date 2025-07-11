@@ -9,4 +9,7 @@ interface Screen {
 
     @Serializable
     data object BrushEraseScreen: Screen
+
+    @Serializable
+    data object CropImageScreen: Screen
 }
