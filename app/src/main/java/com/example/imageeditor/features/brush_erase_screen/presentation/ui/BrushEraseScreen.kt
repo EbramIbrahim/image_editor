@@ -3,7 +3,6 @@ package com.example.imageeditor.features.brush_erase_screen.presentation.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -104,8 +103,6 @@ fun BrushEraseScreen(
                 onAction = onAction,
                 modifier = Modifier
                     .capturable(captureController)
-                    .fillMaxWidth()
-                    .weight(1f)
             )
 
             CanvasControllerItem(

@@ -68,6 +68,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Capture
-    implementation("dev.shreyaspatil:capturable:2.1.0")
+    implementation(libs.capturable)
 
 }

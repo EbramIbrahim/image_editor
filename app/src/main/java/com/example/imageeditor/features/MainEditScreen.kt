@@ -81,7 +81,9 @@ fun MainEditScreen(
                         "Done",
                         style = TextStyle(fontSize = 16.sp),
                         modifier = Modifier.padding(end = 8.dp)
-
+                            .clickable {
+                                // navigate back with edited image
+                            }
                     )
                 }
             )
@@ -149,19 +151,22 @@ fun MainEditScreen(
                             icon = R.drawable.paint,
                             iconTitle = "Brush",
                             onIconPressed = {
-                                onAction(DrawingAction.OnUpdatedBitmap(bitmap = image))
                                 navController.navigate(Screen.BrushEraseScreen)
                             }
                         )
                         EditIcon(
                             icon = R.drawable.crop,
                             iconTitle = "Crop",
-                            onIconPressed = {}
+                            onIconPressed = {
+                                // update crop state with image parameter
+                            }
                         )
                         EditIcon(
                             icon = R.drawable.rotate,
                             iconTitle = "Rotate",
-                            onIconPressed = {}
+                            onIconPressed = {
+                                // update rotation state with image parameter
+                            }
                         )
                     }
 
