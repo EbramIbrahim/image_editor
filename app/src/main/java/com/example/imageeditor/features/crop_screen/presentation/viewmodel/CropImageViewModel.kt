@@ -14,6 +14,7 @@ class CropImageViewModel : ViewModel() {
 
     private val cropImageService: CropImageService = CropImageServiceImpl()
     fun onCrop(cropRect: Rect, bitmap: ImageBitmap): Bitmap {
+        // I will catch the exception then
         return cropImageService.cropImage(
             bitmap = bitmap.asAndroidBitmap(),
             cropRect = cropRect
