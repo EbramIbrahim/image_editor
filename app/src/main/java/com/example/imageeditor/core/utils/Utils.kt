@@ -38,21 +38,4 @@ object Utils {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-
-
-    fun imageBitmapToBase64(imageBitmap: ImageBitmap): String {
-        val bitmap = imageBitmap.asAndroidBitmap()
-
-        val byteArrayOutputStream = java.io.ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val byteArray = byteArrayOutputStream.toByteArray()
-
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
-    }
-
-    fun base64ToImageBitmap(base64String: String): ImageBitmap {
-        val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
-        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-        return bitmap.asImageBitmap()
-    }
 }
