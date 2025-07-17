@@ -12,6 +12,8 @@ composeBom = "2024.09.00"
 
 lifecycle = "2.8.7"
 
+emoji2-emojipicker = "1.5.0"
+
 navigationCompose = "2.9.0"
 kotlinxSerializationJson = "1.7.3"
 appcompat = "1.7.1"
@@ -46,6 +48,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
+androidx-emoji2-emojipicker = { group = "androidx.emoji2", name = "emoji2-emojipicker", version.ref = "emoji2-emojipicker" }
 
 
 [plugins]

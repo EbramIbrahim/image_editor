@@ -15,4 +15,7 @@ interface Screen {
 
     @Serializable
     data object ImageRotationScreen: Screen
+
+    @Serializable
+    data object EmojiEditScreen: Screen
 }

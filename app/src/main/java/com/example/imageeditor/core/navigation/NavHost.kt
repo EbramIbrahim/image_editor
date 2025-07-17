@@ -11,6 +11,7 @@ import com.example.imageeditor.features.brush_erase_screen.presentation.ui.Brush
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
 import com.example.imageeditor.features.crop_screen.presentation.ui.CropImageScreen
+import com.example.imageeditor.features.emoji_screen.presentation.ui.EmojiEditScreen
 import com.example.imageeditor.features.main_edit_screen.presentation.viewmodel.MainEditViewModel
 import com.example.imageeditor.features.rotation_screen.presentation.ui.ImageRotationScreen
 
@@ -71,14 +72,19 @@ fun SetupNavHost(
             )
         }
 
+        composable<Screen.EmojiEditScreen> {
+            EmojiEditScreen(
+                currentImage = imageState.value!!,
+                onUpdateImageWithEmoji = {
+                    viewModel.updateImage(it)
+                },
+                navController = navController
+            )
+        }
+
     }
 
 }
-
-
-
-
-
 
 
 

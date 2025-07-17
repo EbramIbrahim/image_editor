@@ -73,4 +73,8 @@ dependencies {
     // Capture
     implementation(libs.capturable)
 
+    // Emoji
+    implementation(libs.androidx.emoji2.emojipicker)
+
+
 }
