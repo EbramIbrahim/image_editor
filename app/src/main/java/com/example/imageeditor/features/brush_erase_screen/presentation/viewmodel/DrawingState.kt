@@ -7,7 +7,6 @@ data class DrawingState(
     val selectedColor: Color = Color.Black,
     val currentPath: PathData? = null,
     val paths: List<PathData> = emptyList(),
-    val rotation: Float = 0f,
     val drawingType: DrawingMode = DrawingMode.BRUSH,
     val thickness: Float = 20f
 )
