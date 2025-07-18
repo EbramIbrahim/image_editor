@@ -234,10 +234,10 @@ internal fun ImageCropperView(
             lineTo(bottomRightRect.left, bottomRightRect.center.y)
         }
 
-        drawPath(path = topLeftCropMarkerPath, color = Color.Yellow, style = Stroke(width = 8.dp.toPx()))
-        drawPath(path = topRightCropMarkerPath, color = Color.Yellow, style = Stroke(width = 8.dp.toPx()))
-        drawPath(path = bottomLeftCropMarkerPath, color = Color.Yellow, style = Stroke(width = 8.dp.toPx()))
-        drawPath(path = bottomRightCropMarkerPath, color = Color.Yellow, style = Stroke(width = 8.dp.toPx()))
+        drawPath(path = topLeftCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
+        drawPath(path = topRightCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
+        drawPath(path = bottomLeftCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
+        drawPath(path = bottomRightCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
     }
 }
 
