@@ -60,6 +60,14 @@ class EmojiViewModel : ViewModel() {
             )
         }
     }
+
+    fun deleteEmoji(emoji: EmojiData) {
+        _emojiState.update {
+            it.copy(
+                emojis = it.emojis - emoji
+            )
+        }
+    }
 }
 
 

@@ -39,11 +39,29 @@ fun EmojiControllerCanvasScreen(
                 detectTapGestures(
                     onTap = { tapOffset ->
                         var emojiTapped = false
+                        var cornerTapped = false
                         for (emoji in emojiState.emojis.reversed()) {
-                            if (isTapInsideEmojiBound(tapOffset, emoji, size)) {
-                                emojiTapped = true
-                                viewModel.selectEmoji(emoji)
-                                break
+                            if (emoji.isSelected) {
+                                if (isTabDeleteCorner(
+                                        tapOffset = tapOffset,
+                                        emoji = emoji,
+                                        canvasSize = size,
+                                    )
+                                ) {
+                                    // delete from viewModel
+                                    viewModel.deleteEmoji(emoji)
+                                    cornerTapped = true
+                                    break
+                                }
+                            }
+                        }
+                        if (!cornerTapped) {
+                            for (emoji in emojiState.emojis.reversed()) {
+                                if (isTapInsideEmojiBound(tapOffset, emoji, size)) {
+                                    emojiTapped = true
+                                    viewModel.selectEmoji(emoji)
+                                    break
+                                }
                             }
                         }
 
@@ -92,10 +110,10 @@ private fun DrawScope.drawEmoji(emojis: List<EmojiData>) {
                 drawImage(
                     image = sticker.imageBitmap,
                     dstOffset = IntOffset(
-                        (centerX - 30f).toInt(),
-                        (centerY - 30f).toInt()
+                        (centerX - 40f).toInt(),
+                        (centerY - 40f).toInt()
                     ),
-                    dstSize = IntSize(60, 60)
+                    dstSize = IntSize(80, 80)
                 )
             }
         }
@@ -103,10 +121,33 @@ private fun DrawScope.drawEmoji(emojis: List<EmojiData>) {
         // Draw selection indicator
         if (sticker.isSelected) {
             drawCircle(
-                color = Color.Cyan,
-                radius = 40f * sticker.scale,
+                color = Color.Black,
+                radius = 50f * sticker.scale,
                 center = Offset(centerX, centerY),
                 style = Stroke(width = 2f)
+            )
+
+            val handleSize = 10f
+            val handleDistance = 45f * sticker.scale
+            val corner = Offset(centerX + handleDistance, centerY - handleDistance)
+
+
+            drawCircle(
+                color = Color.Red,
+                radius = handleSize + 3f,
+                center = corner
+            )
+            drawLine(
+                color = Color.White,
+                start = Offset(corner.x - 6f, corner.y - 6f),
+                end = Offset(corner.x + 6f, corner.y + 6f),
+                strokeWidth = 3f
+            )
+            drawLine(
+                color = Color.White,
+                start = Offset(corner.x - 6f, corner.y + 6f),
+                end = Offset(corner.x + 6f, corner.y - 6f),
+                strokeWidth = 3f
             )
         }
     }
@@ -119,7 +160,7 @@ private fun isTapInsideEmojiBound(
 ): Boolean {
     val centerX = canvasSize.width / 2f + emoji.offset.x
     val centerY = canvasSize.height / 2f + emoji.offset.y
-    val emojiRadius = 30f * emoji.scale
+    val emojiRadius = 40f * emoji.scale
 
     val distance = sqrt(
         ((tapOffset.x - centerX) * (tapOffset.x - centerX) +
@@ -127,4 +168,23 @@ private fun isTapInsideEmojiBound(
     ).toFloat()
 
     return distance <= emojiRadius
+}
+
+private fun isTabDeleteCorner(
+    tapOffset: Offset,
+    emoji: EmojiData,
+    canvasSize: IntSize
+): Boolean {
+    val centerX = canvasSize.width / 2f + emoji.offset.x
+    val centerY = canvasSize.height / 2f + emoji.offset.y
+    val handleDistance = 45f * emoji.scale
+    val handleSize = 18f
+
+    val corner = Offset(centerX + handleDistance, centerY - handleDistance)
+
+    val distance = sqrt(
+        ((tapOffset.x - corner.x) * (tapOffset.x - corner.x) +
+                (tapOffset.y - corner.y) * (tapOffset.y - corner.y)).toDouble()
+    ).toFloat()
+    return distance <= handleSize
 }
