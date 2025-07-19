@@ -171,7 +171,7 @@ fun MainEditScreen(
                         icon = R.drawable.rotate,
                         iconTitle = "Rotate",
                         onIconPressed = {
-                            // update rotation state with image parameter
+                            navController.navigate(Screen.ImageRotationScreen)
                         }
                     )
                 }
