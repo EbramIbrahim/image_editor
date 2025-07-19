@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.imageeditor.core.presentation.component.ImageEditorTopAppBar
@@ -68,7 +69,11 @@ fun CropImageScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CropImageLayout {
-                Image(bitmap = currentImage, contentDescription = null)
+                Image(
+                    bitmap = currentImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit
+                )
 
                 ImageCropperView(
                     onCropMarkerChanged = {

@@ -164,7 +164,7 @@ fun MainEditScreen(
                         icon = R.drawable.crop,
                         iconTitle = "Crop",
                         onIconPressed = {
-                            // update crop state with image parameter
+                            navController.navigate(Screen.CropImageScreen)
                         }
                     )
                     EditIcon(
@@ -173,44 +173,6 @@ fun MainEditScreen(
                         onIconPressed = {
                             // update rotation state with image parameter
                         }
-                    Spacer(modifier = Modifier.height(40.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .background(Color.White),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        EditIcon(
-                            icon = R.drawable.paint,
-                            iconTitle = "Brush",
-                            onIconPressed = {
-                                navController.navigate(Screen.BrushEraseScreen)
-                            }
-                        )
-                        EditIcon(
-                            icon = R.drawable.crop,
-                            iconTitle = "Crop",
-                            onIconPressed = {
-                                navController.navigate(Screen.CropImageScreen)
-                            }
-                        )
-                        EditIcon(
-                            icon = R.drawable.rotate,
-                            iconTitle = "Rotate",
-                            onIconPressed = {
-                                // update rotation state with image parameter
-                            }
-                        )
-                    }
-
-
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
                     )
                 }
             }
