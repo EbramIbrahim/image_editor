@@ -13,20 +13,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Slider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import com.example.imageeditor.R
-import com.example.imageeditor.features.main_edit_screen.presentation.ui.EditIcon
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingMode
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
+import com.example.imageeditor.features.main_edit_screen.presentation.ui.EditIcon
 
 @Composable
 fun ColumnScope.CanvasControllerItem(
@@ -36,17 +38,6 @@ fun ColumnScope.CanvasControllerItem(
     modifier: Modifier = Modifier
 ) {
     if (state.drawingType == DrawingMode.BRUSH) {
-
-        Slider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 5.dp),
-            value = state.thickness,
-            onValueChange = {
-                onAction(DrawingAction.OnBrushThicknessUpdated(it))
-            },
-            valueRange = 0f..100f
-        )
 
         Row(
             modifier = modifier
@@ -59,7 +50,7 @@ fun ColumnScope.CanvasControllerItem(
                 Box(
                     modifier = Modifier
                         .graphicsLayer {
-                            val scale = if(isSelected) 1.2f else 1f
+                            val scale = if (isSelected) 1.2f else 1f
                             scaleX = scale
                             scaleY = scale
                         }
@@ -68,7 +59,7 @@ fun ColumnScope.CanvasControllerItem(
                         .background(color)
                         .border(
                             width = 2.dp,
-                            color = if(isSelected) {
+                            color = if (isSelected) {
                                 Color.Black
                             } else {
                                 Color.Transparent
@@ -83,41 +74,59 @@ fun ColumnScope.CanvasControllerItem(
         }
     }
 
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(26.dp, Alignment.CenterHorizontally)
-        ) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(26.dp, Alignment.CenterHorizontally)
+    ) {
 
-            EditIcon(
-                icon = R.drawable.paint_brush,
-                iconTitle = "",
-                onIconPressed = {
-                    onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
-                }
-            )
 
-            EditIcon(
-                icon = R.drawable.eraser,
-                iconTitle = "",
-                onIconPressed = {
-                    onAction(DrawingAction.OnDrawModeChanged(DrawingMode.ERASER))
-                }
-            )
-        }
+        BrushIcon(scale = 0.5f, onIconClicked = {
+            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+            onAction(DrawingAction.OnBrushThicknessUpdated(10f))
+        })
+        BrushIcon(scale = 0.75f, onIconClicked = {
+            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+            onAction(DrawingAction.OnBrushThicknessUpdated(30f))
+        })
+        BrushIcon(scale = 1f, onIconClicked = {
+            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+            onAction(DrawingAction.OnBrushThicknessUpdated(50f))
+        })
+
+        EditIcon(
+            icon = R.drawable.eraser,
+            iconTitle = "",
+            onIconPressed = {
+                onAction(DrawingAction.OnDrawModeChanged(DrawingMode.ERASER))
+            }
+        )
+    }
     Spacer(modifier = Modifier.height(40.dp))
 }
 
 
+@Composable
+fun BrushIcon(
+    scale: Float,
+    onIconClicked: () -> Unit
+) {
+
+    Box(modifier = Modifier.size(34.dp)) {
+        Icon(
+            painter = painterResource(R.drawable.line),
+            contentDescription = "Scaled Icon",
+            modifier = Modifier
+                .scale(scale)
+                .clickable {
+                    onIconClicked()
+                }
+        )
+    }
 
 
-
-
-
-
-
-
+}
 
 
 
