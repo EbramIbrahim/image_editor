@@ -174,6 +174,13 @@ fun MainEditScreen(
                             navController.navigate(Screen.ImageRotationScreen)
                         }
                     )
+                    EditIcon(
+                        icon = R.drawable.emoji,
+                        iconTitle = "Emojis",
+                        onIconPressed = {
+                            navController.navigate(Screen.EmojiEditScreen)
+                        }
+                    )
                 }
             }
 
