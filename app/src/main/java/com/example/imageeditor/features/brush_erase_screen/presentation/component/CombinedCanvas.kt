@@ -3,7 +3,6 @@ package com.example.imageeditor.features.brush_erase_screen.presentation.compone
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,21 +21,19 @@ fun CombinedCanvas(
 ) {
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-            val imageAspectRatio = currentImage.width.toFloat() / currentImage.height.toFloat()
-            Image(
-                currentImage,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(imageAspectRatio),
-                contentScale = ContentScale.FillHeight
-            )
+        val imageAspectRatio = currentImage.width.toFloat() / currentImage.height.toFloat()
+        Image(
+            currentImage,
+            contentDescription = null,
+            modifier = Modifier
+                .aspectRatio(imageAspectRatio),
+            contentScale = ContentScale.Fit
+        )
         DrawingBrushCanvas(
             paths = state.paths,
             currentPath = state.currentPath,
             onAction = onAction,
             modifier = Modifier
-                .fillMaxWidth()
                 .aspectRatio(imageAspectRatio)
 
         )
