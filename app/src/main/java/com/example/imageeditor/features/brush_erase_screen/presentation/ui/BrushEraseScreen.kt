@@ -3,6 +3,7 @@ package com.example.imageeditor.features.brush_erase_screen.presentation.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.imageeditor.core.utils.Utils.allColors
+import com.example.imageeditor.features.brush_erase_screen.presentation.component.CanvasControllerItem
+import com.example.imageeditor.features.brush_erase_screen.presentation.component.CombinedCanvas
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingAction
 import com.example.imageeditor.features.brush_erase_screen.presentation.viewmodel.DrawingState
 import dev.shreyaspatil.capturable.capturable
@@ -53,6 +56,7 @@ fun BrushEraseScreen(
     val captureController = rememberCaptureController()
     Scaffold(
         topBar = {
+
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
                 title = {
@@ -106,6 +110,8 @@ fun BrushEraseScreen(
                 state = state,
                 onAction = onAction,
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
                     .capturable(captureController)
             )
 

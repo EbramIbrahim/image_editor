@@ -14,17 +14,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +53,34 @@ fun MainEditScreen(
     navController: NavController
 ) {
 
+    val context = LocalContext.current
+
+    val pickVisualMediaLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { contentUri ->
+        contentUri?.let { uri ->
+            context.contentResolver.openFileDescriptor(uri, "r").use {
+                it?.let { parcelFileDescriptor ->
+                    val fd: FileDescriptor = parcelFileDescriptor.fileDescriptor
+                    val bitmap: Bitmap = BitmapFactory.decodeFileDescriptor(fd)
+                    onImageSelected(bitmap.asImageBitmap())
+                }
+            }
+        }
+    }
+
+    val permissionRequestLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            pickVisualMediaLauncher.launch(
+                PickVisualMediaRequest(
+                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,13 +99,26 @@ fun MainEditScreen(
                     }
                 },
                 actions = {
-                    Text(
-                        "Done",
-                        style = TextStyle(fontSize = 16.sp),
+                    Icon(
+                        painter = painterResource(R.drawable.image),
+                        contentDescription = null,
                         modifier = Modifier
                             .padding(end = 8.dp)
+                            .size(24.dp)
                             .clickable {
-                                // navigate back with edited image
+                                if (Utils.readPermissionsGranted(context)) {
+                                    pickVisualMediaLauncher.launch(
+                                        PickVisualMediaRequest(
+                                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                                        )
+                                    )
+                                } else {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        permissionRequestLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                                    } else {
+                                        permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    }
+                                }
                             }
                     )
                 }
@@ -90,34 +126,6 @@ fun MainEditScreen(
         }
     ) { padding ->
 
-        val context = LocalContext.current
-
-
-        val pickVisualMediaLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.PickVisualMedia()
-        ) { contentUri ->
-            contentUri?.let { uri ->
-                context.contentResolver.openFileDescriptor(uri, "r").use {
-                    it?.let { parcelFileDescriptor ->
-                        val fd: FileDescriptor = parcelFileDescriptor.fileDescriptor
-                        val bitmap: Bitmap = BitmapFactory.decodeFileDescriptor(fd)
-                        onImageSelected(bitmap.asImageBitmap())
-                    }
-                }
-            }
-        }
-
-        val permissionRequestLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-                pickVisualMediaLauncher.launch(
-                    PickVisualMediaRequest(
-                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-                    )
-                )
-            }
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -125,82 +133,49 @@ fun MainEditScreen(
                 .background(Color.White)
         ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                if (imageState != null) {
+            imageState?.let { image ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
                     Image(
-                        modifier = Modifier.fillMaxWidth(),
                         bitmap = imageState,
                         contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.height(40.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .background(Color.White),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        EditIcon(
-                            icon = R.drawable.paint,
-                            iconTitle = "Brush",
-                            onIconPressed = {
-                                navController.navigate(Screen.BrushEraseScreen)
-                            }
-                        )
-                        EditIcon(
-                            icon = R.drawable.crop,
-                            iconTitle = "Crop",
-                            onIconPressed = {
-                                navController.navigate(Screen.CropImageScreen)
-                            }
-                        )
-                        EditIcon(
-                            icon = R.drawable.rotate,
-                            iconTitle = "Rotate",
-                            onIconPressed = {
-                                navController.navigate(Screen.ImageRotationScreen)
-                            }
-                        )
-                    }
-
-
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
+                        contentScale = ContentScale.Fit,
                     )
                 }
-
-                Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        if (Utils.readPermissionsGranted(context)) {
-                            pickVisualMediaLauncher.launch(
-                                PickVisualMediaRequest(
-                                    mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-                                )
-                            )
-                        } else {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                permissionRequestLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
-                            } else {
-                                permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                            }
-                        }
-                    }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .background(Color.White),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(text = "Pick Image")
+                    EditIcon(
+                        icon = R.drawable.paint,
+                        iconTitle = "Brush",
+                        onIconPressed = {
+                            navController.navigate(Screen.BrushEraseScreen)
+                        }
+                    )
+                    EditIcon(
+                        icon = R.drawable.crop,
+                        iconTitle = "Crop",
+                        onIconPressed = {
+                            navController.navigate(Screen.CropImageScreen)
+                        }
+                    )
+                    EditIcon(
+                        icon = R.drawable.rotate,
+                        iconTitle = "Rotate",
+                        onIconPressed = {
+                            // update rotation state with image parameter
+                        }
+                    )
                 }
             }
-
 
         }
     }
