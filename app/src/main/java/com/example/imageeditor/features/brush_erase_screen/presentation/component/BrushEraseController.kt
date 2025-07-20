@@ -82,18 +82,30 @@ fun ColumnScope.CanvasControllerItem(
     ) {
 
 
-        BrushIcon(scale = 0.5f, onIconClicked = {
-            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
-            onAction(DrawingAction.OnBrushThicknessUpdated(10f))
-        })
-        BrushIcon(scale = 0.75f, onIconClicked = {
-            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
-            onAction(DrawingAction.OnBrushThicknessUpdated(30f))
-        })
-        BrushIcon(scale = 1f, onIconClicked = {
-            onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
-            onAction(DrawingAction.OnBrushThicknessUpdated(50f))
-        })
+        BrushIcon(
+            scale = 0.5f,
+            onIconClicked = {
+                onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+                onAction(DrawingAction.OnBrushThicknessUpdated(10f))
+            },
+            isSelected = state.thickness == 10f
+        )
+        BrushIcon(
+            scale = 0.75f,
+            onIconClicked = {
+                onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+                onAction(DrawingAction.OnBrushThicknessUpdated(30f))
+            },
+            isSelected = state.thickness == 30f
+        )
+        BrushIcon(
+            scale = 1f,
+            onIconClicked = {
+                onAction(DrawingAction.OnDrawModeChanged(DrawingMode.BRUSH))
+                onAction(DrawingAction.OnBrushThicknessUpdated(50f))
+            },
+            isSelected = state.thickness == 50f
+        )
 
         EditIcon(
             icon = R.drawable.eraser,
@@ -110,10 +122,16 @@ fun ColumnScope.CanvasControllerItem(
 @Composable
 fun BrushIcon(
     scale: Float,
-    onIconClicked: () -> Unit
+    onIconClicked: () -> Unit,
+    isSelected: Boolean
 ) {
 
-    Box(modifier = Modifier.size(34.dp)) {
+    Box(
+        modifier = Modifier
+            .size(34.dp)
+            .clip(CircleShape)
+            .background(if (isSelected) Color.White.copy(alpha = 0.4f) else Color.Transparent)
+    ) {
         Icon(
             painter = painterResource(R.drawable.line),
             contentDescription = "Scaled Icon",
