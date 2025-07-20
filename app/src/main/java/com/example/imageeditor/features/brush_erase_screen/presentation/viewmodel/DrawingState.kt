@@ -8,7 +8,7 @@ data class DrawingState(
     val currentPath: PathData? = null,
     val paths: List<PathData> = emptyList(),
     val drawingType: DrawingMode = DrawingMode.BRUSH,
-    val thickness: Float = 20f
+    val thickness: Float = 10f
 )
 
 data class PathData(
