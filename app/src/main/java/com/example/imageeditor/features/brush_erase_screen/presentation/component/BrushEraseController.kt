@@ -112,6 +112,8 @@ fun ColumnScope.CanvasControllerItem(
             iconTitle = "",
             onIconPressed = {
                 onAction(DrawingAction.OnDrawModeChanged(DrawingMode.ERASER))
+                onAction(DrawingAction.OnBrushThicknessUpdated(20f))
+
             }
         )
     }
@@ -128,9 +130,9 @@ fun BrushIcon(
 
     Box(
         modifier = Modifier
-            .size(34.dp)
+            .size(36.dp)
             .clip(CircleShape)
-            .background(if (isSelected) Color.White.copy(alpha = 0.4f) else Color.Transparent)
+            .background(if (isSelected) Color.LightGray else Color.Transparent)
     ) {
         Icon(
             painter = painterResource(R.drawable.line),
