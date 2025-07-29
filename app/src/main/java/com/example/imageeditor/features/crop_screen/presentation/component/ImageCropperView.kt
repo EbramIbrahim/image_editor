@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.pointer.pointerInput
@@ -238,6 +239,8 @@ internal fun ImageCropperView(
         drawPath(path = topRightCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
         drawPath(path = bottomLeftCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
         drawPath(path = bottomRightCropMarkerPath, color = Color.White, style = Stroke(width = 4.dp.toPx()))
+        
+        drawGrid(clippableRect)
     }
 }
 
@@ -265,6 +268,36 @@ private val defaultImageCropperState: ImageCropperState = ImageCropperState(
     0f,
     0f
 )
+
+
+fun DrawScope.drawGrid(cropRect: Rect) {
+    val gridColor = Color.White.copy(alpha = 0.7f)
+    val strokeWidth = 1.dp.toPx()
+
+    // Rule of thirds - vertical lines
+    val verticalStep = cropRect.width / 3f
+    for (i in 1..2) {
+        val x = cropRect.left + verticalStep * i
+        drawLine(
+            color = gridColor,
+            start = Offset(x, cropRect.top),
+            end = Offset(x, cropRect.bottom),
+            strokeWidth = strokeWidth
+        )
+    }
+
+    // Rule of thirds - horizontal lines
+    val horizontalStep = cropRect.height / 3f
+    for (i in 1..2) {
+        val y = cropRect.top + horizontalStep * i
+        drawLine(
+            color = gridColor,
+            start = Offset(cropRect.left, y),
+            end = Offset(cropRect.right, y),
+            strokeWidth = strokeWidth
+        )
+    }
+}
 
 const val DEBUG_MODE = false
 fun debug(message: String) {
