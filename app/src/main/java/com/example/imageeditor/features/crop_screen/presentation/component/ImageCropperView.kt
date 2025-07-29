@@ -1,5 +1,6 @@
 package com.example.imageeditor.features.crop_screen.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.runtime.Composable
@@ -30,14 +31,22 @@ internal fun ImageCropperView(
     var dragCurrentOffset by remember { mutableStateOf(Offset.Zero) }
     var isDragStarted by remember { mutableStateOf(false) }
 
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
     var imageCropperState by rememberImageCropperState()
 
     var clippableRect: Rect = Rect.Zero
 
     val imageCropperMarkerTopLeftOffsetProvider: () -> ImageCropperState = remember {
         {
-            val newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(0f, imageCropperState.cropperMarkerRight - 50f)
-            val newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(0f, imageCropperState.cropperMarkerBottom - 50f)
+            val newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(
+                0f,
+                imageCropperState.cropperMarkerRight - 50f
+            )
+            val newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(
+                0f,
+                imageCropperState.cropperMarkerBottom - 50f
+            )
             debug("Top Left")
             imageCropperState.copy(
                 cropperMarkerLeft = newLeft,
@@ -48,8 +57,14 @@ internal fun ImageCropperView(
 
     val imageCropperMarkerTopRightOffsetProvider: () -> ImageCropperState = remember {
         {
-            val newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(0f, imageCropperState.cropperMarkerBottom - 50f)
-            val newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(imageCropperState.cropperMarkerLeft + 50f, imageCropperState.maxSize.width)
+            val newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(
+                0f,
+                imageCropperState.cropperMarkerBottom - 50f
+            )
+            val newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(
+                imageCropperState.cropperMarkerLeft + 50f,
+                imageCropperState.maxSize.width
+            )
             debug("Top Right")
             imageCropperState.copy(
                 cropperMarkerTop = newTop,
@@ -60,8 +75,14 @@ internal fun ImageCropperView(
 
     val imageCropperMarkerBottomLeftOffsetProvider: () -> ImageCropperState = remember {
         {
-            val newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(0f, imageCropperState.cropperMarkerRight - 50f)
-            val newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(imageCropperState.cropperMarkerTop + 50f, imageCropperState.maxSize.height)
+            val newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(
+                0f,
+                imageCropperState.cropperMarkerRight - 50f
+            )
+            val newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(
+                imageCropperState.cropperMarkerTop + 50f,
+                imageCropperState.maxSize.height
+            )
             debug("Bottom Left")
             imageCropperState.copy(
                 cropperMarkerLeft = newLeft,
@@ -72,8 +93,14 @@ internal fun ImageCropperView(
 
     val imageCropperMarkerBottomRightOffsetProvider: () -> ImageCropperState = remember {
         {
-            val newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(imageCropperState.cropperMarkerLeft + 50f, imageCropperState.maxSize.width)
-            val newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(imageCropperState.cropperMarkerTop + 50f, imageCropperState.maxSize.height)
+            val newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(
+                imageCropperState.cropperMarkerLeft + 50f,
+                imageCropperState.maxSize.width
+            )
+            val newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(
+                imageCropperState.cropperMarkerTop + 50f,
+                imageCropperState.maxSize.height
+            )
             debug("Bottom Right")
             imageCropperState.copy(
                 cropperMarkerRight = newRight,
@@ -84,18 +111,30 @@ internal fun ImageCropperView(
 
     val imageCropperDragProvider: () -> ImageCropperState = remember {
         {
-            var newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(0f, imageCropperState.maxSize.width)
-            var newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(0f, imageCropperState.maxSize.height)
-            var newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(0f, imageCropperState.maxSize.width)
-            var newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(0f, imageCropperState.maxSize.height)
+            var newLeft = (imageCropperState.cropperMarkerLeft + dragAmountX).coerceIn(
+                0f,
+                imageCropperState.maxSize.width
+            )
+            var newTop = (imageCropperState.cropperMarkerTop + dragAmountY).coerceIn(
+                0f,
+                imageCropperState.maxSize.height
+            )
+            var newRight = (imageCropperState.cropperMarkerRight + dragAmountX).coerceIn(
+                0f,
+                imageCropperState.maxSize.width
+            )
+            var newBottom = (imageCropperState.cropperMarkerBottom + dragAmountY).coerceIn(
+                0f,
+                imageCropperState.maxSize.height
+            )
 
-            if(newLeft == 0f) {
+            if (newLeft == 0f) {
                 newRight = imageCropperState.cropperMarkerRight
             }
-            if(newTop == 0f) {
+            if (newTop == 0f) {
                 newBottom = imageCropperState.cropperMarkerBottom
             }
-            if(newRight == imageCropperState.maxSize.width) {
+            if (newRight == imageCropperState.maxSize.width) {
                 newLeft = imageCropperState.cropperMarkerLeft
             }
             if(newBottom == imageCropperState.maxSize.height) {
@@ -121,6 +160,17 @@ internal fun ImageCropperView(
                     onDragEnd = {
                         isDragStarted = false
                         onCropMarkerChanged(Pair(clippableRect.topLeft, clippableRect.bottomRight))
+
+                        /**
+                         * Zoom to crop area when drag ends
+                         * ZoomData(cropRect, canvasSize)
+                         * scale = zoomData.scale
+                         * offset = zoomData.offset
+                         */
+                        val zoomData = calculateZoomToCrop(
+                            clippableRect,
+                            Size(size.width.toFloat(), size.height.toFloat())
+                        )
                     }
                 ) { change, dragAmount ->
                     change.consume()
@@ -136,7 +186,7 @@ internal fun ImageCropperView(
                 }
             }
     ) {
-        if(!imageCropperState.isInitialMarkersSet) {
+        if (!imageCropperState.isInitialMarkersSet) {
             imageCropperState = imageCropperState.copy(
                 cropperMarkerLeft = center.x - size.width / 4f,
                 cropperMarkerTop = center.y - size.height / 4f,
@@ -266,9 +316,32 @@ private val defaultImageCropperState: ImageCropperState = ImageCropperState(
     0f
 )
 
+data class ZoomData(val scale: Float, val offset: Offset)
+
+private fun calculateZoomToCrop(
+    cropRect: Rect,
+    canvasSize: Size
+): ZoomData {
+    // Calculate scale to fit crop rect to canvas with some padding
+    val padding = 0.1f // 10% padding
+    val targetWidth = canvasSize.width * (1f - padding)
+    val targetHeight = canvasSize.height * (1f - padding)
+
+    val scaleX = targetWidth / cropRect.width
+    val scaleY = targetHeight / cropRect.height
+    val scale = minOf(scaleX, scaleY)
+
+    // Calculate offset to center the crop area
+    val scaledCropCenter = cropRect.center * scale
+    val canvasCenter = Offset(canvasSize.width / 2, canvasSize.height / 2)
+    val offset = canvasCenter - scaledCropCenter
+
+    return ZoomData(scale, offset)
+}
+
 const val DEBUG_MODE = false
 fun debug(message: String) {
-    if(DEBUG_MODE) {
+    if (DEBUG_MODE) {
         println(message)
     }
 }
